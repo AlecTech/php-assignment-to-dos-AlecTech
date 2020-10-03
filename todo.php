@@ -4,10 +4,8 @@ session_start();
 
 // session_unset();
 
-
 // Make sure to set a default value, if this
-// key/value pair does not yet exist in the
-// associative SESSION array!
+// key/value pair does not yet exist in the associative SESSION array!
 // *** We can't array_push() to a NULL
 //     (undefined) value!
 if ( !isset( $_SESSION['taskHistory'] ) )
@@ -21,17 +19,13 @@ $GLOBALS['pageTitle'] = 'PHP TO-DO App';
 // Show our header.
 include './templates/header.php';
 
-
-
-
-// ======= ToDO from JSON to PHP START
+// ======= Pull ToDO from JSON to PHP START
 $todos = [];
 if (file_exists('todo.json')){
     $json = file_get_contents('todo.json');
     $todos = json_decode($json, true);
 }
-// ======= ToDO from JSON to PHP END
-
+// ======= Pull ToDO from JSON to PHP END
 
 ?>
 
@@ -67,6 +61,15 @@ if (file_exists('todo.json')){
         </form>
     </ul>
 <?php endforeach; ?>
+
+<script>
+    const checkMark = document.querySelectorAll('input[type=checkbox]');
+    checkMark.forEach(check => {
+        check.onclick = function () {
+            this.parentNode.submit();
+        }
+    });
+</script>
 
 <!-- OUTPUT ToDos from JSON FOREACH END -->
 <h2>
