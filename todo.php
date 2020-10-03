@@ -2,6 +2,9 @@
 
 session_start();
 
+// session_unset();
+
+
 // Make sure to set a default value, if this
 // key/value pair does not yet exist in the
 // associative SESSION array!
@@ -18,33 +21,18 @@ $GLOBALS['pageTitle'] = 'PHP TO-DO App';
 // Show our header.
 include './templates/header.php';
 
-// If we want to read values from a GET method submission...
-// we use the $_GET superglobal! It is an associative array.
-echo '<pre>';
-// var_dump( $_GET );
-var_dump( $_POST ); // POST is handled the same way!
-echo '</pre>';
-
-$task = FALSE;
-// if ( !empty( $_GET ) )
-// {
-
-
-    array_push(
-        $_SESSION['taskHistory'],
-        "{$_POST['task']}"
-      );
-// }
-var_dump( $task );
 
 
 
-echo '<pre>';
-var_dump( $_SESSION );
-// Use var_dump, much like we did in JS with console.log.
-// It outputs the data-type and value of what you pass in!
-var_dump( $task ); // What is our result, right now!?
-echo '</pre>';
+// ======= ToDO from JSON to PHP START
+$todos = [];
+if (file_exists('todo.json')){
+    $json = file_get_contents('todo.json');
+    $todos = json_decode($json, true);
+}
+// ======= ToDO from JSON to PHP END
+
+
 ?>
 
 <form method="POST" action="todo.php">
@@ -55,38 +43,88 @@ echo '</pre>';
             
             <span onclick="newElement()" class="addBtn">Add To List</span>
             <span onclick="newElement()" class="addBtn">Reset</span> -->
-            <input type="text" id="addBtn" name="task" value="" >
+            <input type="text" id="myInput" name="task" placeholder="Enter a new task"  >
             <button type="submit" class="addBtn" name="submit"> Add </button>
         </div>
     </div>
-
- <?php if ( isset( $_SESSION['taskHistory'] ) ) : // Check if there IS a task history! ?>
-    <ul id="myUL">
-        <?php foreach ( $_SESSION['taskHistory'] as $newTask ) : ?>
-            <li>
-                <?php echo $newTask; // Output the value from our taskHistory array! ?>
-            </li>
-        <?php endforeach; ?>
-        <!-- <li>Hit the gym</li>
-        <li class="checked">Pay bills</li>
-        <li>Meet Wife</li>
-        <li>Buy eggs</li>
-        <li>Read a book</li>
-        <li>Clean office</li> -->
-    </ul>
- <?php endif; ?>
-
 </form>
+<br>
+<h2>
+    Active To-Dos
+</h2>
+<!-- OUTPUT ToDos from JSON FOREACH START -->
 
-<p>
-  Welcome to Oleg's To-Do APP!
-</p>
+<?php foreach ($todos as $todoName => $todo) : ?>
+    <ul id="myUL">
+        <form action="checked.php" method="post">
+            <input type="hidden" name="task" value="<?php echo $todoName ?>">   
+            <input type="checkbox" <?php echo $todo['done'] ? 'checked' :'' ?>>
+        </form>
+        <?php echo $todoName ?>
+        <form action="delete.php" method="POST">
+            <input type="hidden" name="task" value="<?php echo $todoName ?>">
+            <button> Delete </button>
+        </form>
+    </ul>
+<?php endforeach; ?>
 
-<?php if ( $task != FALSE ) : ?>
-  <p>
-<?php echo $task; ?>
-  </p>
-<?php endif; ?>
+<!-- OUTPUT ToDos from JSON FOREACH END -->
+<h2>
+    Completed To-Dos 
+</h2>
+
+
+<h2>
+ Debugging
+</h2>
+
+<!-- ========= TODO with JSON file START ============ -->
+<?php
+// If we want to read values from a POST method submission...
+// we use the $_POST superglobal! 
+// check if Post is not empty, then push new key and value inside array
+$task = FALSE;
+if ( !empty( $_POST ) )
+{
+    array_push( $_SESSION['taskHistory'],
+                "{$_POST['task']}"
+              );
+}
+
+// Use var_dump, much like we did in JS with console.log.
+// It outputs the data-type and value of what you pass in!
+echo '<pre>';
+var_dump( $_SESSION );
+var_dump( $task ); 
+echo '</pre>';
+
+
+// echo '<pre>';
+// var_dump($_POST);
+// echo '</pre>';
+
+// $todoName = $_POST['todo_name'] ?? '';
+$todoName = $_POST['task'] ?? '';
+$todoName = trim($todoName);
+if ($todoName)
+{
+    if(file_exists('todo.json')){
+        $json = file_get_contents('todo.json');
+        $jsonArray = json_decode($json, true);
+    } else {
+        $jsonArray = [];
+    }
+    
+    $jsonArray[$todoName] = ['done' => false];
+    // echo '<pre>';
+    // var_dump($jsonArray);
+    // echo '</pre>';
+    // echo $json;
+    file_put_contents('todo.json', json_encode($jsonArray, JSON_PRETTY_PRINT));
+}
+
+?>
+<!-- ========= TODO with JSON file END =========== -->
 
 <?php // Show our footer.
 include './templates/footer.php';

@@ -21,9 +21,12 @@
   
   /* CSS for TO-DOs LIST APP */
   /* <!-- Remove margins and padding from the list  --> */
-ul {
+#myUL {
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 /* <!-- Style the list items  --> */
@@ -44,24 +47,24 @@ ul li {
 }
 
 /* <!-- Set all odd list items to a different color (zebra-stripes)  --> */
-ul li:nth-child(odd) {
-  background: #f9f9f9;
+#myUL:nth-child(odd) {
+  background: #f5dede;
 }
 
  /* <!-- Darker background-color on hover  --> */
-ul li:hover {
+#myUL:hover {
   background: #ddd;
 }
 
 /* <!-- When clicked on, add a background color and strike out text  --> */
-ul li.checked {
+#myUL.checked {
   background: #888;
   color: #fff;
   text-decoration: line-through;
 }
 
 /* <!-- Add a "checked" mark when clicked on  --> */
-ul li.checked::before {
+#myUL.checked::before {
   content: '';
   position: absolute;
   border-color: #fff;

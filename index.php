@@ -5,6 +5,8 @@ $GLOBALS['pageTitle'] = 'Home';
 
 // Show our header.
 include './templates/header.php';
+
+
 ?>
 
 <p>
@@ -12,6 +14,8 @@ include './templates/header.php';
   <?php echo $GLOBALS['pageTitle']; ?>
   page!
 </p>
+
+
 
 <?php // Show our footer.
 include './templates/footer.php';
