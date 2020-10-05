@@ -8,6 +8,7 @@ session_start();
 // key/value pair does not yet exist in the associative SESSION array!
 // *** We can't array_push() to a NULL
 //     (undefined) value!
+//use session for DEBUGGING section ONLY
 if ( !isset( $_SESSION['taskHistory'] ) )
 {
   $_SESSION['taskHistory'] = array();
@@ -19,21 +20,21 @@ $GLOBALS['pageTitle'] = 'PHP TO-DO App';
 // Show our header.
 include './templates/header.php';
 
-// ======= Pull ToDO from JSON to PHP START
+// ======= Pull ToDO from JSON to PHP START=========
 $jsonArray = [];
 if (file_exists('todo.json')){
     $json = file_get_contents('todo.json');
     $jsonArray = json_decode($json, true);
 }
-// ======= Pull ToDO from JSON to PHP END
+// ======= Pull ToDO from JSON to PHP END===========
 ?>
-<!-- ========= Inser TODOs with JSON file START ============ -->
+<!-- ========= Inser TODOs into JSON file START ============ -->
 <?php
 
 // echo '<pre>';
 // var_dump($_POST);
 // echo '</pre>';
-
+// grab data from submit form and trim spaces to avoid empty submittions
 $todoName = $_POST['task'] ?? '';
 $todoName = trim($todoName);
 if ($todoName)
@@ -54,9 +55,9 @@ if ($todoName)
 }
 
 ?>
-<!-- ========= Insert TODOs with JSON file END =========== -->
+<!-- ========= Insert TODOs into JSON file END =========== -->
 
-
+<!-- ========= HTML  Input Form Start =========== -->
 <form method="POST" action="todo.php">
     <div id="myDIV" class="header">
         <h2 style="margin:5px">Add a To-Do</h2>
@@ -67,10 +68,11 @@ if ($todoName)
     </div>
 </form>
 <br>
+<!-- ========= HTML  Input Form End =========== -->
 <h2>
     Active To-Dos
 </h2>
-<!-- OUTPUT ToDos from JSON FOREACH START -->
+<!-- OUTPUT ToDos from JSON using FOREACH START -->
 
 <?php foreach ($jsonArray as $todoName => $todo) : ?>
     <ul id="myUL">
@@ -85,7 +87,9 @@ if ($todoName)
         </form>
     </ul>
 <?php endforeach; ?>
+<!-- OUTPUT ToDos from JSON using FOREACH END -->
 
+<!-- Javascript to listen for checked boxes START -->
 <script>
     const checkMark = document.querySelectorAll('input[type=checkbox]');
     checkMark.forEach(check => {
@@ -94,8 +98,7 @@ if ($todoName)
         }
     });
 </script>
-
-<!-- OUTPUT ToDos from JSON FOREACH END -->
+<!-- Javascript to listen for checked boxes END -->
 
 <!-- Scan through JSON and move done tasks to Completed section START -->
 <?php
@@ -104,16 +107,12 @@ if(file_exists('todo.json'))
 {
     $json = file_get_contents('todo.json');
     $jsonArray = json_decode($json, true);
-
     // echo '<pre>';
     // var_dump($jsonArray);
     // echo '</pre>';
-
-    
     $filtered_values = array_filter($jsonArray, function($item) {
 	return $item["done"] == true;
     });
-    
     // echo '<pre>';
     // var_dump($filtered_values);
     // echo '</pre>';
