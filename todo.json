@@ -1,26 +1,23 @@
 {
     "000000000000": {
+        "done": true
+    },
+    "xxxxxxxxx": {
         "done": false
     },
-    "999999999999": {
+    "zzzzzzzzzz": {
         "done": false
     },
-    "8888888888": {
-        "done": false
+    "sgdsddfh": {
+        "done": true
     },
-    "555555555": {
-        "done": false
-    },
-    "33333333333": {
-        "done": false
-    },
-    "77777777777777": {
+    "77777777": {
         "done": false
     },
     "ewewrwe": {
         "done": false
     },
-    "Oleg homework": {
-        "done": false
+    "1111111111": {
+        "done": true
     }
 }
